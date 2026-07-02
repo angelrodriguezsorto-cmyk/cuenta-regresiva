@@ -19,7 +19,8 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#7ec8ff,#ffd1e8);
+    /* Fondo neutral y festivo: Gris suave y lavanda misterioso */
+    background:linear-gradient(135deg,#e2e8f0,#ebd5ff);
 }
 
 .fondo{
@@ -39,7 +40,7 @@ body{
 @keyframes subir{
     from{
         transform:translateY(0) rotate(0deg);
-        opacity:1;
+        opacity:0.7;
     }
     to{
         transform:translateY(-120vh) rotate(360deg);
@@ -54,7 +55,7 @@ body{
     background:rgba(255,255,255,.95);
     padding:45px;
     border-radius:25px;
-    box-shadow:0 0 30px rgba(0,0,0,.25);
+    box-shadow:0 0 30px rgba(0,0,0,.15);
 }
 
 h1{
@@ -65,19 +66,21 @@ h1{
 p{
     color:#666;
     margin-bottom:20px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 #contador{
     font-size:120px;
     font-weight:bold;
-    color:#ff4fa3;
+    /* Color neutro: Morado mágico */
+    color:#9333ea;
     animation:pulso 1s infinite;
 }
 
-/* Detener animación de pulso si el contador está pausado o no ha iniciado */
 #contador.pausado {
     animation-play-state: paused;
-    color: #999;
+    color: #94a3b8;
 }
 
 @keyframes pulso{
@@ -108,7 +111,6 @@ p{
     }
 }
 
-/* Estilos para el botón de control */
 .btn-control {
     margin-top: 15px;
     padding: 15px 30px;
@@ -117,9 +119,10 @@ p{
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    background-color: #ff4fa3;
+    /* Botón neutro: Dorado/Amarillo festivo */
+    background-color: #eab308;
     color: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
 
@@ -127,9 +130,8 @@ p{
     transform: scale(1.05);
 }
 
-/* Color verde cuando está en pausa/listo para continuar o iniciar */
 .btn-control.listo-iniciar {
-    background-color: #4CAF50;
+    background-color: #a855f7;
 }
 </style>
 
@@ -140,26 +142,24 @@ p{
 
 <div class="contenedor">
 
-<h1>🎉 Revelación de Género 🎉</h1>
+<h1>✨ Gran Revelación ✨</h1>
 
-<p>¿Será Niño 💙 o Niña 🩷?</p>
+<!-- Texto modificado para no dar pistas -->
+<p>¿Qué Crees Que Será? 🤔</p>
 
-<!-- El contador inicia estático con la clase 'pausado' -->
 <div id="contador" class="pausado">10</div>
 
 <div id="resultado"></div>
 
-<!-- Botón inicial para arrancar la secuencia -->
 <button id="btnControl" class="btn-control listo-iniciar">Iniciar Cuenta Regresiva 🚀</button>
 
 </div>
 
 <script>
 
-// Cuenta regresiva
 let tiempo=10;
-let iniciado=false; // Controla si el temporizador ya arrancó
-let enPausa=true;   // Inicia pausado obligatoriamente
+let iniciado=false; 
+let enPausa=true;   
 let intervalo;
 
 const contador=document.getElementById("contador");
@@ -175,7 +175,7 @@ function iniciarContador() {
             if(tiempo<=0){
                 clearInterval(intervalo);
                 contador.style.display="none";
-                btnControl.style.display="none"; // Esconde el botón al terminar
+                btnControl.style.display="none"; 
 
                 const genero="niña";
 
@@ -195,10 +195,8 @@ function iniciarContador() {
     },1000);
 }
 
-// Lógica del botón único de control
 btnControl.addEventListener("click", () => {
     if (!iniciado) {
-        // Primera pulsación: Arranca el contador
         iniciado = true;
         enPausa = false;
         contador.classList.remove("pausado");
@@ -206,7 +204,6 @@ btnControl.addEventListener("click", () => {
         btnControl.classList.remove("listo-iniciar");
         iniciarContador();
     } else {
-        // Pulsaciones siguientes: Pausar o Continuar
         enPausa = !enPausa;
         if(enPausa) {
             btnControl.textContent = "Continuar ▶️";
@@ -220,42 +217,32 @@ btnControl.addEventListener("click", () => {
     }
 });
 
-
-// Globos flotando
 const fondo=document.getElementById("fondo");
 
-const emojis=["🎈","🍼","💙","🩷","☁️"];
+// Emojis neutros de misterio y fiesta
+const emojis=["❓","✨","🎁","🎈","☁️"];
 
 for(let i=0;i<30;i++){
-
     let e=document.createElement("div");
     e.className="burbuja";
     e.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
     e.style.left=Math.random()*100+"%";
     e.style.animationDuration=(5+Math.random()*6)+"s";
     e.style.fontSize=(25+Math.random()*35)+"px";
-
     fondo.appendChild(e);
 }
 
-
-// Confeti
 function crearConfeti(color){
-
     for(let i=0;i<250;i++){
-
         let c=document.createElement("div");
         c.className="confeti";
-
         c.style.left=Math.random()*100+"vw";
         c.style.background=color;
         c.style.animationDuration=(2+Math.random()*3)+"s";
         c.style.animationDelay=(Math.random()*2)+"s";
-
         if(Math.random() < 0.5) {
             c.style.borderRadius = "50%";
         }
-
         document.body.appendChild(c);
     }
 }
