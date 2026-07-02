@@ -92,7 +92,7 @@ p{
     width:12px;
     height:12px;
     top:-20px;
-    z-index:10; /* CORRECCIÓN: Esto trae el confeti al frente de la pantalla */
+    z-index:10;
     animation:caer 4s linear infinite;
 }
 
@@ -140,7 +140,8 @@ clearInterval(intervalo);
 
 contador.style.display="none";
 
-const genero=Math.random()<0.5?"niño":"niña";
+// MODIFICACIÓN: Fijado para que siempre sea niña
+const genero="niña";
 
 if(genero==="niño"){
 resultado.innerHTML="💙 ¡ES NIÑO! 💙";
@@ -191,7 +192,6 @@ c.style.background=color;
 c.style.animationDuration=(2+Math.random()*3)+"s";
 c.style.animationDelay=(Math.random()*2)+"s";
 
-// Pequeña mejora visual: mezcla círculos y cuadrados
 if(Math.random() < 0.5) {
     c.style.borderRadius = "50%";
 }
