@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -93,6 +92,7 @@ p{
     width:12px;
     height:12px;
     top:-20px;
+    z-index:10; /* CORRECCIÓN: Esto trae el confeti al frente de la pantalla */
     animation:caer 4s linear infinite;
 }
 
@@ -190,6 +190,11 @@ c.style.left=Math.random()*100+"vw";
 c.style.background=color;
 c.style.animationDuration=(2+Math.random()*3)+"s";
 c.style.animationDelay=(Math.random()*2)+"s";
+
+// Pequeña mejora visual: mezcla círculos y cuadrados
+if(Math.random() < 0.5) {
+    c.style.borderRadius = "50%";
+}
 
 document.body.appendChild(c);
 
