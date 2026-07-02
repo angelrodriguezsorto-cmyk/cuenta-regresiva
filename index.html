@@ -74,7 +74,7 @@ p{
     animation:pulso 1s infinite;
 }
 
-/* Detener animación de pulso si el contador está pausado */
+/* Detener animación de pulso si el contador está pausado o no ha iniciado */
 #contador.pausado {
     animation-play-state: paused;
     color: #999;
@@ -108,26 +108,27 @@ p{
     }
 }
 
-/* Estilos para el botón de pausa */
-.btn-pausa {
+/* Estilos para el botón de control */
+.btn-control {
     margin-top: 15px;
-    padding: 12px 25px;
-    font-size: 16px;
+    padding: 15px 30px;
+    font-size: 18px;
     font-weight: bold;
     border: none;
     border-radius: 50px;
     cursor: pointer;
     background-color: #ff4fa3;
     color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     transition: all 0.2s ease;
 }
 
-.btn-pausa:hover {
+.btn-control:hover {
     transform: scale(1.05);
 }
 
-.btn-pausa.en-pausa {
+/* Color verde cuando está en pausa/listo para continuar o iniciar */
+.btn-control.listo-iniciar {
     background-color: #4CAF50;
 }
 </style>
@@ -143,12 +144,13 @@ p{
 
 <p>¿Será Niño 💙 o Niña 🩷?</p>
 
-<div id="contador">10</div>
+<!-- El contador inicia estático con la clase 'pausado' -->
+<div id="contador" class="pausado">10</div>
 
 <div id="resultado"></div>
 
-<!-- Nuevo botón de control -->
-<button id="btnPausa" class="btn-pausa">Pausar ⏸️</button>
+<!-- Botón inicial para arrancar la secuencia -->
+<button id="btnControl" class="btn-control listo-iniciar">Iniciar Cuenta Regresiva 🚀</button>
 
 </div>
 
@@ -156,12 +158,13 @@ p{
 
 // Cuenta regresiva
 let tiempo=10;
-let enPausa=false; // Variable para controlar el estado
+let iniciado=false; // Controla si el temporizador ya arrancó
+let enPausa=true;   // Inicia pausado obligatoriamente
 let intervalo;
 
 const contador=document.getElementById("contador");
 const resultado=document.getElementById("resultado");
-const btnPausa=document.getElementById("btnPausa");
+const btnControl=document.getElementById("btnControl");
 
 function iniciarContador() {
     intervalo=setInterval(()=>{
@@ -172,7 +175,7 @@ function iniciarContador() {
             if(tiempo<=0){
                 clearInterval(intervalo);
                 contador.style.display="none";
-                btnPausa.style.display="none"; // Esconder botón al terminar
+                btnControl.style.display="none"; // Esconde el botón al terminar
 
                 const genero="niña";
 
@@ -192,20 +195,28 @@ function iniciarContador() {
     },1000);
 }
 
-// Iniciar el reloj de inmediato
-iniciarContador();
-
-// Lógica del botón Pausar / Continuar
-btnPausa.addEventListener("click", () => {
-    enPausa = !enPausa;
-    if(enPausa) {
-        btnPausa.textContent = "Continuar ▶️";
-        btnPausa.classList.add("en-pausa");
-        contador.classList.add("pausado");
-    } else {
-        btnPausa.textContent = "Pausar ⏸️";
-        btnPausa.classList.remove("en-pausa");
+// Lógica del botón único de control
+btnControl.addEventListener("click", () => {
+    if (!iniciado) {
+        // Primera pulsación: Arranca el contador
+        iniciado = true;
+        enPausa = false;
         contador.classList.remove("pausado");
+        btnControl.textContent = "Pausar ⏸️";
+        btnControl.classList.remove("listo-iniciar");
+        iniciarContador();
+    } else {
+        // Pulsaciones siguientes: Pausar o Continuar
+        enPausa = !enPausa;
+        if(enPausa) {
+            btnControl.textContent = "Continuar ▶️";
+            btnControl.classList.add("listo-iniciar");
+            contador.classList.add("pausado");
+        } else {
+            btnControl.textContent = "Pausar ⏸️";
+            btnControl.classList.remove("listo-iniciar");
+            contador.classList.remove("pausado");
+        }
     }
 });
 
