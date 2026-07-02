@@ -74,6 +74,12 @@ p{
     animation:pulso 1s infinite;
 }
 
+/* Detener animación de pulso si el contador está pausado */
+#contador.pausado {
+    animation-play-state: paused;
+    color: #999;
+}
+
 @keyframes pulso{
     50%{
         transform:scale(1.15);
@@ -101,6 +107,29 @@ p{
         transform:translateY(110vh) rotate(720deg);
     }
 }
+
+/* Estilos para el botón de pausa */
+.btn-pausa {
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    background-color: #ff4fa3;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.btn-pausa:hover {
+    transform: scale(1.05);
+}
+
+.btn-pausa.en-pausa {
+    background-color: #4CAF50;
+}
 </style>
 
 </head>
@@ -118,46 +147,67 @@ p{
 
 <div id="resultado"></div>
 
+<!-- Nuevo botón de control -->
+<button id="btnPausa" class="btn-pausa">Pausar ⏸️</button>
+
 </div>
 
 <script>
 
 // Cuenta regresiva
 let tiempo=10;
+let enPausa=false; // Variable para controlar el estado
+let intervalo;
 
 const contador=document.getElementById("contador");
 const resultado=document.getElementById("resultado");
+const btnPausa=document.getElementById("btnPausa");
 
-const intervalo=setInterval(()=>{
+function iniciarContador() {
+    intervalo=setInterval(()=>{
+        if(!enPausa) {
+            tiempo--;
+            contador.textContent=tiempo;
 
-tiempo--;
+            if(tiempo<=0){
+                clearInterval(intervalo);
+                contador.style.display="none";
+                btnPausa.style.display="none"; // Esconder botón al terminar
 
-contador.textContent=tiempo;
+                const genero="niña";
 
-if(tiempo<=0){
+                if(genero==="niño"){
+                    resultado.innerHTML="💙 ¡ES NIÑO! 💙";
+                    resultado.style.color="#2196F3";
+                    crearConfeti("#2196F3");
+                }else{
+                    resultado.innerHTML="🩷 ¡ES NIÑA! 🩷";
+                    resultado.style.color="#ff4fa3";
+                    crearConfeti("#ff4fa3");
+                }
 
-clearInterval(intervalo);
-
-contador.style.display="none";
-
-// MODIFICACIÓN: Fijado para que siempre sea niña
-const genero="niña";
-
-if(genero==="niño"){
-resultado.innerHTML="💙 ¡ES NIÑO! 💙";
-resultado.style.color="#2196F3";
-crearConfeti("#2196F3");
-}else{
-resultado.innerHTML="🩷 ¡ES NIÑA! 🩷";
-resultado.style.color="#ff4fa3";
-crearConfeti("#ff4fa3");
+                resultado.style.display="block";
+            }
+        }
+    },1000);
 }
 
-resultado.style.display="block";
+// Iniciar el reloj de inmediato
+iniciarContador();
 
-}
-
-},1000);
+// Lógica del botón Pausar / Continuar
+btnPausa.addEventListener("click", () => {
+    enPausa = !enPausa;
+    if(enPausa) {
+        btnPausa.textContent = "Continuar ▶️";
+        btnPausa.classList.add("en-pausa");
+        contador.classList.add("pausado");
+    } else {
+        btnPausa.textContent = "Pausar ⏸️";
+        btnPausa.classList.remove("en-pausa");
+        contador.classList.remove("pausado");
+    }
+});
 
 
 // Globos flotando
@@ -167,39 +217,36 @@ const emojis=["🎈","🍼","💙","🩷","☁️"];
 
 for(let i=0;i<30;i++){
 
-let e=document.createElement("div");
-e.className="burbuja";
-e.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
-e.style.left=Math.random()*100+"%";
-e.style.animationDuration=(5+Math.random()*6)+"s";
-e.style.fontSize=(25+Math.random()*35)+"px";
+    let e=document.createElement("div");
+    e.className="burbuja";
+    e.innerHTML=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=Math.random()*100+"%";
+    e.style.animationDuration=(5+Math.random()*6)+"s";
+    e.style.fontSize=(25+Math.random()*35)+"px";
 
-fondo.appendChild(e);
-
+    fondo.appendChild(e);
 }
 
 
 // Confeti
 function crearConfeti(color){
 
-for(let i=0;i<250;i++){
+    for(let i=0;i<250;i++){
 
-let c=document.createElement("div");
-c.className="confeti";
+        let c=document.createElement("div");
+        c.className="confeti";
 
-c.style.left=Math.random()*100+"vw";
-c.style.background=color;
-c.style.animationDuration=(2+Math.random()*3)+"s";
-c.style.animationDelay=(Math.random()*2)+"s";
+        c.style.left=Math.random()*100+"vw";
+        c.style.background=color;
+        c.style.animationDuration=(2+Math.random()*3)+"s";
+        c.style.animationDelay=(Math.random()*2)+"s";
 
-if(Math.random() < 0.5) {
-    c.style.borderRadius = "50%";
-}
+        if(Math.random() < 0.5) {
+            c.style.borderRadius = "50%";
+        }
 
-document.body.appendChild(c);
-
-}
-
+        document.body.appendChild(c);
+    }
 }
 
 </script>
